@@ -1,4 +1,4 @@
-import { BaseWidget } from './base.js';
+import { BaseWidget } from '../lib/base.js';
 
 export default function createWidget(element) {
   return new WidgetA(element);
@@ -21,14 +21,6 @@ class WidgetA extends BaseWidget {
     
     this.button.addEventListener('click', this.clickHandler);
     this.input.addEventListener('input', this.inputHandler);
-  }
-
-  getShapeType() {
-    return 'square';
-  }
-
-  getShapeColor() {
-    return '#FF5722';
   }
 
   clickHandler = (e) => {

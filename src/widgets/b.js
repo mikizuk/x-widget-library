@@ -1,4 +1,4 @@
-import { BaseWidget } from './base.js';
+import { BaseWidget } from '../lib/base.js';
 
 export default function createWidget(element) {
   return new WidgetB(element);
@@ -23,14 +23,6 @@ class WidgetB extends BaseWidget {
     this.countDisplay = this.content.querySelector('.count');
     this.content.querySelector('.increment').addEventListener('click', this.incrementHandler);
     this.content.querySelector('.decrement').addEventListener('click', this.decrementHandler);
-  }
-
-  getShapeType() {
-    return 'triangle';
-  }
-
-  getShapeColor() {
-    return '#9C27B0';
   }
 
   incrementHandler = () => {

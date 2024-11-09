@@ -1,4 +1,4 @@
-import { BaseWidget } from './base.js';
+import { BaseWidget } from '../lib/base.js';
 
 export default function createWidget(element) {
   return new WidgetC(element);
@@ -22,14 +22,6 @@ class WidgetC extends BaseWidget {
     this.preview = this.content.querySelector('.preview');
     this.select = this.content.querySelector('.theme-select');
     this.select.addEventListener('change', this.themeChangeHandler);
-  }
-
-  getShapeType() {
-    return 'diamond';
-  }
-
-  getShapeColor() {
-    return '#2196F3';
   }
 
   themeChangeHandler = (e) => {
