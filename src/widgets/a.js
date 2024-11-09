@@ -5,37 +5,31 @@ export default function createWidget(element) {
 }
 
 class WidgetA extends BaseWidget {
-  init() {
-    super.init();
-    
-    this.content = document.createElement('div');
-    this.content.innerHTML = `
+  async _initContent(wrapper) {
+    wrapper.innerHTML = `
       <h3>Widget A</h3>
       <input type="text" class="input-field" placeholder="Type here...">
       <button class="action-btn">Click me</button>
+      <div class="text-display"></div>
     `;
-    this.element.appendChild(this.content);
 
-    this.input = this.content.querySelector('.input-field');
-    this.button = this.content.querySelector('.action-btn');
+    this.textDisplay = wrapper.querySelector('.text-display');
+    this.input = wrapper.querySelector('.input-field');
+    this.button = wrapper.querySelector('.action-btn');
     
     this.button.addEventListener('click', this.clickHandler);
     this.input.addEventListener('input', this.inputHandler);
   }
 
   clickHandler = (e) => {
-    console.log('Widget A button clicked');
     this.button.textContent = 'Clicked!';
   }
 
   inputHandler = (e) => {
-    console.log('Widget A input:', e.target.value);
+    this.textDisplay.textContent = e.target.value;
   }
 
   destroy() {
-    if (this.content) {
-      this.content.remove();
-    }
     super.destroy();
   }
 }

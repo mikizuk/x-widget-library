@@ -1,20 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>X Widget Library Demo</title>
+  <link rel="icon" type="image/svg+xml" href="./public/js.svg">
   <link rel="stylesheet" href="./src/styles/style.css">
 </head>
+
 <body>
+
   <div class="container">
     <div class="section widget-tree">
       <h2>X Widget Tree</h2>
       <div id="root">
         <div widget="widgets/a">
-          <div widget="widgets/b"></div>
+          <div widget="widgets/b">
+            <div widget="widgets/c"></div>
+          </div>
         </div>
         <div></div>
-        <div widget="widgets/c"></div>
+        <div widget="widgets/c">
+          <div widget="widgets/a"></div>
+          <div widget="widgets/b"></div>
+        </div>
       </div>
     </div>
 
@@ -35,6 +44,8 @@
     </div>
   </div>
 
-  <script type="module" src="./src/main.js"></script>
+  <script defer type="module" src="./src/main.js"></script>
+
 </body>
+
 </html>

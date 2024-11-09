@@ -5,12 +5,9 @@ export default function createWidget(element) {
 }
 
 class WidgetB extends BaseWidget {
-  init() {
-    super.init();
-    
+  async _initContent(wrapper) {
     this.count = 0;
-    this.content = document.createElement('div');
-    this.content.innerHTML = `
+    wrapper.innerHTML = `
       <h3>Widget B</h3>
       <div class="counter">
         <button class="decrement">-</button>
@@ -18,11 +15,10 @@ class WidgetB extends BaseWidget {
         <button class="increment">+</button>
       </div>
     `;
-    this.element.appendChild(this.content);
 
-    this.countDisplay = this.content.querySelector('.count');
-    this.content.querySelector('.increment').addEventListener('click', this.incrementHandler);
-    this.content.querySelector('.decrement').addEventListener('click', this.decrementHandler);
+    this.countDisplay = wrapper.querySelector('.count');
+    wrapper.querySelector('.increment').addEventListener('click', this.incrementHandler);
+    wrapper.querySelector('.decrement').addEventListener('click', this.decrementHandler);
   }
 
   incrementHandler = () => {
@@ -40,9 +36,6 @@ class WidgetB extends BaseWidget {
   }
 
   destroy() {
-    if (this.content) {
-      this.content.remove();
-    }
     super.destroy();
   }
 }

@@ -5,11 +5,8 @@ export default function createWidget(element) {
 }
 
 class WidgetC extends BaseWidget {
-  init() {
-    super.init();
-    
-    this.content = document.createElement('div');
-    this.content.innerHTML = `
+  async _initContent(wrapper) {
+    wrapper.innerHTML = `
       <h3>Widget C</h3>
       <select class="theme-select">
         <option value="light">Light</option>
@@ -17,10 +14,9 @@ class WidgetC extends BaseWidget {
       </select>
       <div class="preview">Preview Area</div>
     `;
-    this.element.appendChild(this.content);
 
-    this.preview = this.content.querySelector('.preview');
-    this.select = this.content.querySelector('.theme-select');
+    this.preview = wrapper.querySelector('.preview');
+    this.select = wrapper.querySelector('.theme-select');
     this.select.addEventListener('change', this.themeChangeHandler);
   }
 
@@ -31,9 +27,6 @@ class WidgetC extends BaseWidget {
   }
 
   destroy() {
-    if (this.content) {
-      this.content.remove();
-    }
     super.destroy();
   }
 }
