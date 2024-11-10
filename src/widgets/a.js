@@ -10,7 +10,7 @@ class WidgetA extends BaseWidget {
       <h3>Widget A</h3>
       <input type="text" class="input-field" placeholder="Type here...">
       <button class="action-btn">Click me</button>
-      <div class="text-display"></div>
+      <span class="text-display"></div>
     `;
 
     this.textDisplay = wrapper.querySelector('.text-display');

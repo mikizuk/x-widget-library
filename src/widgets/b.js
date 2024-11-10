@@ -9,11 +9,9 @@ class WidgetB extends BaseWidget {
     this.count = 0;
     wrapper.innerHTML = `
       <h3>Widget B</h3>
-      <div class="counter">
-        <button class="decrement">-</button>
-        <span class="count">0</span>
-        <button class="increment">+</button>
-      </div>
+      <button class="decrement">-</button>
+      <span class="count">0</span>
+      <button class="increment">+</button>
     `;
 
     this.countDisplay = wrapper.querySelector('.count');

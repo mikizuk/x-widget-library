@@ -1,0 +1,153 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background: #f0f0f0;
+  height: 100vh;
+}
+
+.wrapper {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  grid-template-rows: 1fr 4fr;
+  grid-gap: 1rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-block: 1rem;
+  height: 100%;
+}
+
+section {
+  background: white;
+  padding: 1rem;
+  border-radius: .5rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+section.controls {
+  grid-column: 1;
+}
+
+section.info {
+  grid-column: 2;
+  grid-row: 1 / 3;
+}
+
+section.controls button {
+  margin: .4rem;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 4px;
+  background: #007bff;
+  color: white;
+  cursor: pointer;
+}
+
+section.controls button:hover:not(:disabled) {
+  background: #0056b3;
+}
+
+section.controls button:disabled {
+  background: #cccccc;
+  cursor: not-allowed;
+}
+
+section.info .info-content {
+  background: #f8f9fa;
+  padding: 1rem;
+  border-radius: 4px;
+}
+
+section.info .info-logs {
+  background: #2b2b2b;
+  color: #fff;
+  padding: 1rem;
+  border-radius: 4px;
+  font-family: monospace;
+  overflow-y: auto;
+}
+
+section.info .log-entry {
+  margin-bottom: .2rem;
+  padding-block: .4rem;
+  font-size: .7rem;
+}
+
+section.info .log-entry.error {
+  color: #ff8080;
+}
+
+section.info .log-time {
+  color: #888;
+}
+
+/* section.widget-tree */
+
+#root div:not(.widget-content) {
+  border: 2px solid #ccc;
+  margin: 10px;
+  padding: 30px;
+  border-radius: 4px;
+  cursor: pointer;
+  position: relative;
+  min-height: 30px;
+}
+
+#root div:not(.widget-content).selected {
+  border-color: #007bff;
+}
+
+[widget].widget-initializing {
+  background: #fff3cd;
+}
+
+[widget].widget-initialized {
+  background: #d4edda;
+}
+
+[widget].widget-done {
+  background: #cce5ff !important;
+}
+
+[widget].widget-failed {
+  background: #f8d7da !important;
+}
+
+[widget].widget-failed::after {
+  content: 'Failed';
+  position: absolute;
+  top: 3px;
+  right: 8px;
+  font-size: .7rem;
+  color: #dc3545;
+}
+
+[widget] h3 {
+  margin-top: 0;
+}
+
+[widget] .input-field {
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 50%;
+  box-sizing: border-box;
+}
+
+[widget] .count {
+  padding-inline: .6rem;
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+[widget] .preview {
+  margin-top: 10px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+}

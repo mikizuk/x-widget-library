@@ -5,43 +5,45 @@
   <meta charset="UTF-8">
   <title>X Widget Library Demo</title>
   <link rel="icon" type="image/svg+xml" href="./public/js.svg">
-  <link rel="stylesheet" href="./src/styles/style.css">
+  <link rel="stylesheet" href="./src/style.css">
 </head>
 
 <body>
 
-  <div class="container">
-    <div class="section widget-tree">
+  <div class="wrapper">
+    <section class="controls">
+      <h2>Controls</h2>
+      <button disabled id="init-btn">Init Selected</button>
+      <button disabled id="destroy-btn">Destroy Selected</button>
+      <button disabled id="done-btn">Mark Done</button>
+      <button disabled id="fail-btn">Simulate Fail</button>
+    </section>
+
+    <section class="widget-tree">
       <h2>X Widget Tree</h2>
       <div id="root">
         <div widget="widgets/a">
           <div widget="widgets/b">
-            <div widget="widgets/c"></div>
           </div>
         </div>
         <div></div>
+        <div widget="widgets/c"></div>
         <div widget="widgets/c">
           <div widget="widgets/a"></div>
           <div widget="widgets/b"></div>
         </div>
       </div>
-    </div>
+    </section>
 
-    <div class="section controls">
-      <h2>Controls</h2>
-      <button id="initBtn">Init Selected</button>
-      <button id="destroyBtn">Destroy Selected</button>
-      <button id="doneBtn">Mark Done</button>
-      <button id="failBtn">Simulate Fail</button>
-    </div>
-
-    <div class="section info">
+    <section class="info">
       <h2>Info</h2>
-      <div id="info-content">
-        <p>Selected: <span id="selected-path">none</span></p>
-        <p>Status: <span id="status">-</span></p>
+      <div class="info-content">
+        <p>Selected: <span class="selected-path">none</span></p>
+        <p>Status: <span class="status">-</span></p>
       </div>
-    </div>
+      <h3>Logs</h3>
+      <div class="info-logs"></div>
+    </section>
   </div>
 
   <script defer type="module" src="./src/main.js"></script>

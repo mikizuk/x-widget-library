@@ -12,7 +12,7 @@ class WidgetC extends BaseWidget {
         <option value="light">Light</option>
         <option value="dark">Dark</option>
       </select>
-      <div class="preview">Preview Area</div>
+      <p class="preview">Preview Area</div>
     `;
 
     this.preview = wrapper.querySelector('.preview');
