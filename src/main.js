@@ -1,4 +1,4 @@
-import { XWidgetManager as X } from './lib/xWidgetManager.js';
+import { X } from './lib/x.js';
 
 let selectedNode = null;
 const logs = [];
@@ -6,9 +6,9 @@ const logs = [];
 function addLog(message, type = 'info', node = null) {
   const timestamp = new Date().toLocaleTimeString();
   const widgetPath = node?.getAttribute('widget');
-  const formattedMessage = widgetPath 
-  ? `${message} ${widgetPath}`
-  : message;
+  const formattedMessage = widgetPath
+    ? `${message} ${widgetPath}`
+    : message;
 
   logs.push({ message: formattedMessage, timestamp, type });
   updateLogs();
@@ -95,7 +95,7 @@ document.getElementById('root').addEventListener('click', (e) => {
   updateInfo(selectedNode);
 
   const widgetPath = node.getAttribute('widget');
-  addLog(`Selected ${widgetPath || 'regular DOM node'}`);
+  addLog(`Selected: ${widgetPath || 'regular DOM node'}`);
 });
 
 document.getElementById('init-btn').addEventListener('click', () => {
@@ -107,13 +107,14 @@ document.getElementById('init-btn').addEventListener('click', () => {
 
   X.init(selectedNode, (errors) => {
 
-    console.log("main callback! when all has been loaded?", );
+    console.log("main.js callback!", 'errors', errors);
     if (errors) {
       console.error('Initialization errors:', errors);
       errors.forEach(error => {
         addLog(`Error initializing ${error.node.getAttribute('widget')}: ${error.error.message}`, 'error');
       });
     } else {
+      console.log("success!", );
       traverseWidgets(selectedNode, (node) => {
         const instance = X.getInstance(node);
         if (instance?.initialized) {
@@ -146,7 +147,7 @@ document.getElementById('done-btn').addEventListener('click', () => {
       throw new Error('Widget must be initialized and not in failed state');
     }
     X.markDone(selectedNode);
-    addLog('Marked widget as done:');
+    addLog('Marked as done:', 'info', selectedNode);
     updateInfo(selectedNode);
   } catch (error) {
     console.error('Cannot mark as done:', error.message);

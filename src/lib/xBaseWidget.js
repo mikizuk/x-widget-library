@@ -18,8 +18,6 @@ export class XBaseWidget {
       return Array.from(props);
     };
 
-    console.log("getAllProperties?", getAllProperties(this));
-
     getAllProperties(this)
       .filter(prop => {
         const descriptor = Object.getOwnPropertyDescriptor(Object.getPrototypeOf(this), prop);
@@ -36,12 +34,9 @@ export class XBaseWidget {
   }
 
   async init() {
-    console.log("base widget init", );
-    // Create a wrapper for widget content that will be placed at the top
     this.wrapper = document.createElement('div');
     this.wrapper.classList.add('widget-content');
 
-    // Insert wrapper at the beginning of the element
     if (this.element.firstChild) {
       this.element.insertBefore(this.wrapper, this.element.firstChild);
     } else {
@@ -56,8 +51,6 @@ export class XBaseWidget {
   }
 
   destroy() {
-    console.log(this.wrapper, "destroy!! ");
-    // Remove all bound event handlers
     this.boundHandlers.forEach((handler, key) => {
       this.element.removeEventListener(key.replace('Handler', '').toLowerCase(), handler);
     });
