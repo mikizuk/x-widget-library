@@ -6,14 +6,14 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test": "vitest",
+    "coverage": "vitest run --coverage"
   },
   "devDependencies": {
-    "vite": "^5.4.2"
-  },
-  "dependencies": {
     "npm": "^10.9.0",
-    "start": "^5.1.0"
-  },
-  "packageManager": "pnpm@8.6.2+sha512.0e68307be4f7e17afa5186932d74a984f4bba24e21d843e46874041fa8fb512a00936d42cee780743d6740b9162700e766426e721a342db2a7b49fbd079c6551"
+    "vitest": "^1.2.0",
+    "jsdom": "^24.0.0",
+    "@vitest/coverage-v8": "^1.2.0"
+  }
 }

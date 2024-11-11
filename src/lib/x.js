@@ -14,10 +14,8 @@ export class X {
   }
 
   static async init(root, callback) {
-    console.log("1 init...", );
 
     try {
-      console.log("2 isInitializing", this.#isInitializing(root));
       if (this.#isInitializing(root)) {
         throw new Error('WidgetDestroyed: Widget initialization interrupted by another process');
       }
