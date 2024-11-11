@@ -1,7 +1,6 @@
 import { describe, test, expect, beforeEach, vi } from 'vitest';
 import { XBaseWidget, createXWidget } from './XBaseWidget';
 
-// Mock DOM environment
 class MockElement {
   constructor() {
     this.children = [];
@@ -9,7 +8,6 @@ class MockElement {
     this._classList = new Set();
     this.firstChild = null;
     
-    // Create DOMTokenList-like interface
     this.classList = {
       add: (className) => this._classList.add(className),
       remove: (className) => this._classList.remove(className),
@@ -59,7 +57,6 @@ class MockElement {
   }
 
   remove() {
-    // Simulate element removal
     const parent = this._parentElement;
     if (parent) {
       const index = parent.children.indexOf(this);
@@ -83,10 +80,8 @@ class MockElement {
   }
 }
 
-// Test implementation of XBaseWidget
 class TestWidget extends XBaseWidget {
   clickHandler() {
-    // Test handler
   }
 
   async createContent(wrapper) {
@@ -120,14 +115,11 @@ describe('XBaseWidget', () => {
   });
 
   test('init adds wrapper as first child when element has children', async () => {
-    // Create and append an existing child
     const existingChild = new MockElement();
     element.appendChild(existingChild);
     
-    // Initialize the widget
     await widget.init();
     
-    // Verify the order and properties
     expect(element.children.length).toBe(2);
     expect(element.children[0]).toBe(widget.wrapper);
     expect(element.children[0].classList.contains('widget-content')).toBe(true);

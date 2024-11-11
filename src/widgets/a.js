@@ -18,7 +18,6 @@ class WidgetA extends XBaseWidget {
   }
 
   clickHandler() {
-    console.log("button click this", this);
     this.button.textContent = 'Clicked!';
   }
 

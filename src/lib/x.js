@@ -40,13 +40,10 @@ export class X {
   }
 
   static async #initializeWidgets(node) {
-    console.log("initializeWidgets", );
-    // Get or create widget instance for the node
     if (node.hasAttribute('widget') && !this.#instances.has(node)) {
       await this.#loadAndInitWidget(node);
     }
 
-    // Process children in a top-to-bottom approach
     const children = [...node.children].filter(child => child.hasAttribute('widget'));
     for (const child of children) {
       await this.#initializeWidgets(child);
@@ -54,7 +51,6 @@ export class X {
   }
 
   static async #loadAndInitWidget(node) {
-    console.log("loadAndInitWidget", );
     const widgetPath = node.getAttribute('widget');
     this.#initializingNodes.add(node);
     node.classList.add('widget-initializing');
@@ -81,12 +77,6 @@ export class X {
       this.#initializingNodes.delete(node);
     }
   }
-
-
-  // ----- ----- -----
-  // ----- ----- -----
-  // ----- ----- -----
-  // ----- ----- -----
 
   static destroy(root) {
     const processNode = (node) => {

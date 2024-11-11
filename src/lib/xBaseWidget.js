@@ -56,7 +56,6 @@ export class XBaseWidget {
     });
     this.boundHandlers.clear();
 
-    // Remove the content wrapper
     if (this.wrapper) {
       this.wrapper.remove();
     }

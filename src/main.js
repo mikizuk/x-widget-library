@@ -107,14 +107,12 @@ document.getElementById('init-btn').addEventListener('click', () => {
 
   X.init(selectedNode, (errors) => {
 
-    console.log("main.js callback!", 'errors', errors);
     if (errors) {
       console.error('Initialization errors:', errors);
       errors.forEach(error => {
         addLog(`Error initializing ${error.node.getAttribute('widget')}: ${error.error.message}`, 'error');
       });
     } else {
-      console.log("success!", );
       traverseWidgets(selectedNode, (node) => {
         const instance = X.getInstance(node);
         if (instance?.initialized) {
