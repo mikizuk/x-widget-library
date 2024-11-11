@@ -1,11 +1,7 @@
-import { BaseWidget } from '../lib/base.js';
+import { XBaseWidget, createXWidget } from '../lib/xBaseWidget.js';
 
-export default function createWidget(element) {
-  return new WidgetC(element);
-}
-
-class WidgetC extends BaseWidget {
-  async _initContent(wrapper) {
+class WidgetC extends XBaseWidget {
+  async createContent(wrapper) {
     wrapper.innerHTML = `
       <h3>Widget C</h3>
       <select class="theme-select">
@@ -20,7 +16,7 @@ class WidgetC extends BaseWidget {
     this.select.addEventListener('change', this.themeChangeHandler);
   }
 
-  themeChangeHandler = (e) => {
+  themeChangeHandler(e) {
     const theme = e.target.value;
     this.preview.style.background = theme === 'dark' ? '#333' : '#fff';
     this.preview.style.color = theme === 'dark' ? '#fff' : '#333';
@@ -30,3 +26,5 @@ class WidgetC extends BaseWidget {
     super.destroy();
   }
 }
+
+export default createXWidget(WidgetC);

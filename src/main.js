@@ -1,11 +1,16 @@
-import { X } from './lib/X.js';
+import { XWidgetManager as X } from './lib/xWidgetManager.js';
 
 let selectedNode = null;
 const logs = [];
 
-function addLog(message, type = 'info') {
+function addLog(message, type = 'info', node = null) {
   const timestamp = new Date().toLocaleTimeString();
-  logs.push({ message, timestamp, type });
+  const widgetPath = node?.getAttribute('widget');
+  const formattedMessage = widgetPath 
+  ? `${message} ${widgetPath}`
+  : message;
+
+  logs.push({ message: formattedMessage, timestamp, type });
   updateLogs();
 }
 
@@ -22,11 +27,12 @@ function updateLogs() {
     .join('');
 }
 
-function updateButtonStates(instance) {
-  initBtn.disabled = instance && (instance.initialized || instance.failed);
-  destroyBtn.disabled = !instance || (!instance.initialized && !instance.failed);
-  doneBtn.disabled = !instance || !instance.initialized || instance.failed || instance.done;
-  failBtn.disabled = !instance || instance.failed;
+function traverseWidgets(node, callback) {
+  if (node.hasAttribute('widget')) {
+    callback(node);
+  }
+  const children = [...node.children].filter(child => child.hasAttribute('widget'));
+  children.forEach(child => traverseWidgets(child, callback));
 }
 
 function updateInfo(node) {
@@ -63,10 +69,12 @@ function updateInfo(node) {
     : 'Not initialized';
   statusDisplay.textContent = status;
 
-  updateButtonStates(instance);
+  initBtn.disabled = instance && (instance.initialized || instance.failed);
+  destroyBtn.disabled = !instance || (!instance.initialized && !instance.failed);
+  doneBtn.disabled = !instance || !instance.initialized || instance.failed || instance.done;
+  failBtn.disabled = !instance || instance.failed;
 }
 
-// Event delegation for node selection
 document.getElementById('root').addEventListener('click', (e) => {
   if (e.target.closest('.widget-content')) return;
 
@@ -93,17 +101,25 @@ document.getElementById('root').addEventListener('click', (e) => {
 document.getElementById('init-btn').addEventListener('click', () => {
   if (!selectedNode || !selectedNode.hasAttribute('widget')) return;
 
-  const widgetPath = selectedNode.getAttribute('widget');
-  addLog(`Initializing widget: ${widgetPath}`);
+  traverseWidgets(selectedNode, (node) => {
+    addLog('Initializing widget:', 'info', node);
+  });
 
   X.init(selectedNode, (errors) => {
+
+    console.log("main callback! when all has been loaded?", );
     if (errors) {
       console.error('Initialization errors:', errors);
       errors.forEach(error => {
         addLog(`Error initializing ${error.node.getAttribute('widget')}: ${error.error.message}`, 'error');
       });
     } else {
-      addLog(`Successfully initialized widget: ${widgetPath}`);
+      traverseWidgets(selectedNode, (node) => {
+        const instance = X.getInstance(node);
+        if (instance?.initialized) {
+          addLog('Successfully initialized:', 'info', node);
+        }
+      });
     }
     updateInfo(selectedNode);
   });
@@ -112,8 +128,9 @@ document.getElementById('init-btn').addEventListener('click', () => {
 document.getElementById('destroy-btn').addEventListener('click', () => {
   if (!selectedNode || !selectedNode.hasAttribute('widget')) return;
 
-  const widgetPath = selectedNode.getAttribute('widget');
-  addLog(`Destroying widget: ${widgetPath}`);
+  traverseWidgets(selectedNode, (node) => {
+    addLog('Destroyed:', 'info', node);
+  });
 
   X.destroy(selectedNode);
   updateInfo(selectedNode);
@@ -122,7 +139,6 @@ document.getElementById('destroy-btn').addEventListener('click', () => {
 document.getElementById('done-btn').addEventListener('click', () => {
   if (!selectedNode || !selectedNode.hasAttribute('widget')) return;
 
-  const widgetPath = selectedNode.getAttribute('widget');
 
   try {
     const instance = X.getInstance(selectedNode);
@@ -130,7 +146,7 @@ document.getElementById('done-btn').addEventListener('click', () => {
       throw new Error('Widget must be initialized and not in failed state');
     }
     X.markDone(selectedNode);
-    addLog(`Marked widget as done: ${widgetPath}`);
+    addLog('Marked widget as done:');
     updateInfo(selectedNode);
   } catch (error) {
     console.error('Cannot mark as done:', error.message);
@@ -141,8 +157,9 @@ document.getElementById('done-btn').addEventListener('click', () => {
 document.getElementById('fail-btn').addEventListener('click', () => {
   if (!selectedNode || !selectedNode.hasAttribute('widget')) return;
 
-  const widgetPath = selectedNode.getAttribute('widget');
-  addLog(`Simulating failure for widget: ${widgetPath}`, 'error');
+  traverseWidgets(selectedNode, (node) => {
+    addLog('Simulating failure for:', 'error', node);
+  });
 
   X.simulateFail(selectedNode);
   updateInfo(selectedNode);

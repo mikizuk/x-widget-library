@@ -1,19 +1,20 @@
-export class X {
+export class XWidgetManager {
   static #instances = new WeakMap();
-  static #resolver = path => {
-    // Remove 'widgets/' prefix and handle path resolution
-    const widgetName = path.replace('widgets/', '');
-    return import(`../widgets/${widgetName}.js`);
+  static async #resolver(path) {
+    try {
+      const widgetName = path.replace('widgets/', '');
+      const module = await import(`../widgets/${widgetName}.js`);
+      return module;
+    } catch (error) {
+      throw new Error(`Failed to load widget ${path}`);
+    }
   };
 
-  static setResolver(resolver) {
-    this.#resolver = resolver;
-  }
-
   static async init(root, callback) {
+    console.log("X init");
     try {
       const errors = [];
-      
+
       const processNode = async (node) => {
         if (this.#instances.has(node)) {
           return;
@@ -24,26 +25,29 @@ export class X {
 
         try {
           node.classList.add('widget-initializing');
+
+          await new Promise(res => setTimeout(res, 600)); // go to the future
+
           const module = await this.#resolver(widgetPath);
           const createWidget = module.default;
-          
+
           const widget = createWidget(node);
           await widget.init();
-          
+
           const instance = {
             widget,
             initialized: true,
             done: false,
             failed: false
           };
-          
+
           this.#instances.set(node, instance);
           node.classList.remove('widget-initializing');
           node.classList.add('widget-initialized');
-          
+
           const children = [...node.children].filter(child => child.hasAttribute('widget'));
           await Promise.all(children.map(child => processNode(child)));
-          
+
         } catch (error) {
           errors.push({ node, error });
           node.classList.add('widget-failed');
@@ -54,6 +58,7 @@ export class X {
       await processNode(root);
       callback(errors.length ? errors : null);
     } catch (error) {
+    console.log("X init");
       callback([{ node: root, error }]);
     }
   }
@@ -95,20 +100,20 @@ export class X {
     const processFailure = (node) => {
       const instance = this.#instances.get(node);
       if (!instance) return;
-      
+
       const children = [...node.children].filter(child => child.hasAttribute('widget'));
       children.forEach(child => processFailure(child));
-      
+
       if (instance?.widget?.destroy) {
         instance.widget.destroy();
       }
-      
+
       this.#instances.set(node, {
         initialized: false,
         done: false,
         failed: true
       });
-      
+
       node.classList.add('widget-failed');
       node.classList.remove('widget-initialized');
       node.classList.remove('widget-done');

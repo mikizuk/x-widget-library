@@ -1,11 +1,7 @@
-import { BaseWidget } from '../lib/base.js';
+import { XBaseWidget, createXWidget } from '../lib/xBaseWidget.js';
 
-export default function createWidget(element) {
-  return new WidgetB(element);
-}
-
-class WidgetB extends BaseWidget {
-  async _initContent(wrapper) {
+class WidgetB extends XBaseWidget {
+  async createContent(wrapper) {
     this.count = 0;
     wrapper.innerHTML = `
       <h3>Widget B</h3>
@@ -19,12 +15,12 @@ class WidgetB extends BaseWidget {
     wrapper.querySelector('.decrement').addEventListener('click', this.decrementHandler);
   }
 
-  incrementHandler = () => {
+  incrementHandler() {
     this.count++;
     this.updateDisplay();
   }
 
-  decrementHandler = () => {
+  decrementHandler() {
     this.count--;
     this.updateDisplay();
   }
@@ -37,3 +33,5 @@ class WidgetB extends BaseWidget {
     super.destroy();
   }
 }
+
+export default createXWidget(WidgetB);

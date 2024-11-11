@@ -1,11 +1,7 @@
-import { BaseWidget } from '../lib/base.js';
+import { XBaseWidget, createXWidget } from '../lib/xBaseWidget.js';
 
-export default function createWidget(element) {
-  return new WidgetA(element);
-}
-
-class WidgetA extends BaseWidget {
-  async _initContent(wrapper) {
+class WidgetA extends XBaseWidget {
+  async createContent(wrapper) {
     wrapper.innerHTML = `
       <h3>Widget A</h3>
       <input type="text" class="input-field" placeholder="Type here...">
@@ -21,11 +17,12 @@ class WidgetA extends BaseWidget {
     this.input.addEventListener('input', this.inputHandler);
   }
 
-  clickHandler = (e) => {
+  clickHandler() {
+    console.log("button click this", this);
     this.button.textContent = 'Clicked!';
   }
 
-  inputHandler = (e) => {
+  inputHandler(e) {
     this.textDisplay.textContent = e.target.value;
   }
 
@@ -33,3 +30,5 @@ class WidgetA extends BaseWidget {
     super.destroy();
   }
 }
+
+export default createXWidget(WidgetA);
