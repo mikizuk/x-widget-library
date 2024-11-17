@@ -83,6 +83,7 @@ document.getElementById('root').addEventListener('click', (e) => {
   });
 
   const node = e.target.closest('#root div');
+
   if (!node) {
     selectedNode = null;
     updateInfo(null);
@@ -98,7 +99,9 @@ document.getElementById('root').addEventListener('click', (e) => {
   addLog(`Selected: ${widgetPath || 'regular DOM node'}`);
 });
 
-document.getElementById('init-btn').addEventListener('click', () => {
+document.getElementById('init-btn').addEventListener('click', async (event) => {
+  event.stopPropagation();
+  
   if (!selectedNode || !selectedNode.hasAttribute('widget')) return;
 
   traverseWidgets(selectedNode, (node) => {
@@ -106,9 +109,7 @@ document.getElementById('init-btn').addEventListener('click', () => {
   });
 
   X.init(selectedNode, (errors) => {
-
     if (errors) {
-      console.error('Initialization errors:', errors);
       errors.forEach(error => {
         addLog(`Error initializing ${error.node.getAttribute('widget')}: ${error.error.message}`, 'error');
       });
