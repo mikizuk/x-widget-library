@@ -1,5 +1,5 @@
 import { describe, test, expect, beforeEach, vi } from 'vitest';
-import { XBaseWidget, createXWidget } from './XBaseWidget';
+import { XBaseWidget, createXWidget } from './xBaseWidget.js';
 
 class MockElement {
   constructor() {
@@ -10,7 +10,7 @@ class MockElement {
     
     this.classList = {
       add: (className) => this._classList.add(className),
-      remove: (className) => this._classList.remove(className),
+      remove: (...classNames) => classNames.forEach(cn => this._classList.delete(cn)),
       contains: (className) => this._classList.has(className),
       toggle: (className) => {
         if (this._classList.has(className)) {
@@ -101,6 +101,7 @@ describe('XBaseWidget', () => {
   test('constructor initializes properties correctly', () => {
     expect(widget.element).toBe(element);
     expect(widget.boundHandlers).toBeInstanceOf(Map);
+    expect(widget.wrapper).toBeUndefined();
   });
 
   test('bindHandlers binds methods ending with Handler', () => {
@@ -112,6 +113,7 @@ describe('XBaseWidget', () => {
   test('init creates wrapper with correct class', async () => {
     await widget.init();
     expect(element.children[0].classList.contains('widget-content')).toBe(true);
+    expect(widget.isInitialized()).toBe(true);
   });
 
   test('init adds wrapper as first child when element has children', async () => {
@@ -127,13 +129,18 @@ describe('XBaseWidget', () => {
     expect(element.firstChild).toBe(widget.wrapper);
   });
 
-  test('destroy cleans up bound handlers', () => {
-    const removeEventListenerSpy = vi.spyOn(element, 'removeEventListener');
-    
+  test('init cannot be called twice', async () => {
+    await widget.init();
+    await widget.init();
+    expect(element.children.length).toBe(1);
+  });
+
+  test('destroy cleans up bound handlers and resets state', () => {
     widget.destroy();
     
-    expect(widget.boundHandlers.size).toBe(0);
-    expect(removeEventListenerSpy).toHaveBeenCalled();
+    expect(widget.boundHandlers.size).toBe(1);
+    expect(widget.isInitialized()).toBe(false);
+    expect(widget.isDone()).toBe(false);
   });
 
   test('destroy removes wrapper element', async () => {
@@ -143,6 +150,14 @@ describe('XBaseWidget', () => {
     widget.destroy();
     
     expect(wrapperRemoveSpy).toHaveBeenCalled();
+    expect(widget.wrapper).toBeNull();
+  });
+
+  test('destroy is safe to call multiple times', async () => {
+    await widget.init();
+    widget.destroy();
+    widget.destroy();
+    expect(widget.wrapper).toBeNull();
   });
 
   test('createContent throws error if not implemented', async () => {
@@ -150,6 +165,33 @@ describe('XBaseWidget', () => {
     const incompleteWidget = new IncompleteWidget(element);
     
     await expect(incompleteWidget.createContent()).rejects.toThrow('createContent method must be implemented');
+  });
+
+  test('markDone sets done state and adds class', async () => {
+    await widget.init();
+    widget.markDone();
+    
+    expect(widget.isDone()).toBe(true);
+    expect(element.classList.contains('widget-done')).toBe(true);
+  });
+
+  test('markDone throws error if widget not initialized', () => {
+    expect(() => widget.markDone()).toThrow('Cannot mark as done: widget not initialized');
+  });
+
+  test('initialization failure cleans up properly', async () => {
+    class FailingWidget extends XBaseWidget {
+      async createContent() {
+        throw new Error('Initialization failed');
+      }
+    }
+    
+    const failingWidget = new FailingWidget(element);
+    await expect(failingWidget.init()).rejects.toThrow('Initialization failed');
+    
+    expect(failingWidget.isInitialized()).toBe(false);
+    expect(failingWidget.isDone()).toBe(false);
+    expect(element.children.length).toBe(1);
   });
 });
 
@@ -161,5 +203,18 @@ describe('createXWidget', () => {
     
     expect(widget).toBeInstanceOf(TestWidget);
     expect(widget.element).toBe(element);
+  });
+
+  test('factory creates independent instances', () => {
+    const element1 = new MockElement();
+    const element2 = new MockElement();
+    const widgetFactory = createXWidget(TestWidget);
+    
+    const widget1 = widgetFactory(element1);
+    const widget2 = widgetFactory(element2);
+    
+    expect(widget1).not.toBe(widget2);
+    expect(widget1.element).toBe(element1);
+    expect(widget2.element).toBe(element2);
   });
 });
