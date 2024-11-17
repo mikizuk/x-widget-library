@@ -2,6 +2,9 @@
 
 A lightweight, modular widget management system built with vanilla JavaScript. This library demonstrates a flexible approach to handling widget initialization, lifecycle management, and state control.
 
+
+[🚀 Live preview link to X-Widget-Library](https://x-widget-library-by-mickey.netlify.app/)
+
 ## Features
 
 - **Dynamic Widget Loading**: Asynchronous loading of widget modules
@@ -16,12 +19,14 @@ A lightweight, modular widget management system built with vanilla JavaScript. T
 ```
 ├── src/
 │   ├── lib/
-│   │   ├── X.js           # Core widget management system
-│   │   └── BaseWidget.js  # Base widget class
+│   │   ├── x.js                  # Core widget management system
+│   │   └── x.test.js             # Test file for above
+│   │   └── xBaseWidget.js        # Base widget class
+│   │   └── xBaseWidget.test.js   # Test file for above
 │   └── widgets/
-│       ├── a.js           # Widget A implementation
-│       ├── b.js           # Widget B implementation
-│       └── c.js           # Widget C implementation
+│       ├── a.js                  # Widget A implementation
+│       ├── b.js                  # Widget B implementation
+│       └── c.js                  # Widget C implementation
 ├── index.html
 ├── main.js
 └── style.css
